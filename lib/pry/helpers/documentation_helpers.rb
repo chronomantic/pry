@@ -8,7 +8,6 @@ class Pry
       module_function
 
       def process_rdoc(comment)
-        return comment unless Pry.config.color
         comment = comment.dup
         comment.gsub(/<code>(?:\s*\n)?(.*?)\s*<\/code>/m) { CodeRay.scan($1, :ruby).term }.
           gsub(/<em>(?:\s*\n)?(.*?)\s*<\/em>/m) { "\e[1m#{$1}\e[0m" }.
@@ -33,15 +32,17 @@ class Pry
         end.join
       end
 
-      def process_yardoc(comment)
+      def process_yardoc(comment, color=false)
         yard_tags = ["param", "return", "option", "yield", "attr", "attr_reader", "attr_writer",
                      "deprecate", "example", "raise"]
         (yard_tags - ["example"]).inject(comment) { |a, v| process_yardoc_tag(a, v) }.
-          gsub(/^@(#{yard_tags.join("|")})/) { Pry.config.color ? "\e[33m#{$1}\e[0m": $1 }
+          gsub(/^@(#{yard_tags.join("|")})/) { color ? "\e[33m#{$1}\e[0m": $1 }
       end
 
-      def process_comment_markup(comment)
-        process_yardoc process_rdoc(comment)
+      def process_comment_markup(comment, color=false)
+        comment = process_rdoc(comment) if color
+
+        process_yardoc comment, color
       end
 
       # @param [String] code
@@ -52,7 +53,7 @@ class Pry
 
       # Given a string that makes up a comment in a source-code file parse out the content
       # that the user is intended to read. (i.e. without leading indentation, #-characters
-      # or shebangs)
+      # or shebangs)lib/pry/repl.rb
       #
       # @param [String] comment
       # @return [String]

@@ -66,7 +66,7 @@ describe Pry::Helpers::DocumentationHelpers do
 
     it "should do nothing if Pry.config.color is false" do
       Pry.config.color = false
-      @helper.process_rdoc("  4 + 4\n").should == "  4 + 4\n"
+      @helper.process_comment_markup("  4 + 4\n").should == "  4 + 4\n"
     end
   end
 

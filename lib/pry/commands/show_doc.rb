@@ -40,7 +40,7 @@ class Pry
             obj_name ? obj_name : 'current context'
           }"
         end
-        process_comment_markup(docs)
+        process_comment_markup(docs, _pry_.config.color)
       end
     end
 
