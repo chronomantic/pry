@@ -1,6 +1,9 @@
 # PP subclass for streaming inspect output in color.
 class Pry
   class ColorPrinter < ::PP
+
+    attr_reader :_pry_
+
     OBJ_COLOR = begin
       code = CodeRay::Encoders::Terminal::TOKEN_COLORS[:keyword]
       if code.start_with? "\e"
@@ -10,15 +13,20 @@ class Pry
       end
     end
 
-    def self.pp(obj, out = $>, width = 79)
-      q = ColorPrinter.new(out, width)
+    def initialize(_pry_, out = $>, width = 79)
+      @_pry_ = _pry_
+      super(out, width)
+    end
+
+    def self.pp(_pry_, obj, out = $>, width = 79)
+      q = ColorPrinter.new(_pry_, out, width)
       q.guard_inspect_key { q.pp obj }
       q.flush
       out << "\n"
     end
 
     def text(str, width = str.length)
-      super(*if !Pry.config.color
+      super(*if !_pry_.config.color
         [str, width]
       # Don't recolorize output with color [Issue #751]
       elsif str.include?("\e[")
@@ -43,7 +51,7 @@ class Pry
       obj_id = obj.__id__.to_s(16) rescue 0
       str    = "#<#{klass}:0x#{obj_id}>"
 
-      text(Pry.config.color ? highlight_object_literal(str) : str)
+      text(_pry_.config.color ? highlight_object_literal(str) : str)
     end
 
     private

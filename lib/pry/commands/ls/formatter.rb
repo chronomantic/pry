@@ -29,7 +29,7 @@ class Pry
       end
 
       def format_value(value)
-        Pry::ColorPrinter.pp(value, '')
+        Pry::ColorPrinter.pp(_pry_, value, '')
       end
 
       def correct_opts?
