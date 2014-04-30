@@ -107,7 +107,8 @@ class Pry
         if output.tty? && pry.config.correct_indent && Pry::Helpers::BaseHelpers.use_ansi_codes?
           output.print @indent.correct_indentation(
             current_prompt, indented_val,
-            original_val.length - indented_val.length
+            original_val.length - indented_val.length,
+            pry.config.color
           )
           output.flush
         end

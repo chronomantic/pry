@@ -46,8 +46,8 @@ class Pry
         windows_ansi? || ENV['TERM'] && ENV['TERM'] != "dumb"
       end
 
-      def colorize_code(code)
-        if Pry.config.color
+      def colorize_code(code, color = false)
+        if color
           CodeRay.scan(code, :ruby).term
         else
           code

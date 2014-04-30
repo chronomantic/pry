@@ -382,7 +382,7 @@ class Pry
     # @param [Fixnum] overhang (0) The number of chars to erase afterwards (i.e.,
     #   the difference in length between the old line and the new one).
     # @return [String]
-    def correct_indentation(prompt, code, overhang=0)
+    def correct_indentation(prompt, code, overhang=0, color=false)
       prompt = prompt.delete("\001\002")
       line_to_measure = Pry::Helpers::Text.strip_color(prompt) << code
       whitespace = ' ' * overhang
@@ -400,7 +400,7 @@ class Pry
         move_down = "\e[#{lines}B\e[0G"
       end
 
-      "#{move_up}#{prompt}#{colorize_code(code)}#{whitespace}#{move_down}"
+      "#{move_up}#{prompt}#{colorize_code(code, color)}#{whitespace}#{move_down}"
     end
   end
 end

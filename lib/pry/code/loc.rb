@@ -59,9 +59,9 @@ class Pry
       #
       # @param [Integer] max_width
       # @return [void]
-      def add_line_number(max_width = 0)
+      def add_line_number(max_width = 0, color = false)
         padded = lineno.to_s.rjust(max_width)
-        colorized_lineno = Pry::Helpers::BaseHelpers.colorize_code(padded)
+        colorized_lineno = Pry::Helpers::BaseHelpers.colorize_code(padded, color)
         tuple[0] = "#{ colorized_lineno }: #{ line }"
       end
 
