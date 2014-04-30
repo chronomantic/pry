@@ -9,7 +9,7 @@ class Pry::Command::ListInspectors < Pry::ClassCommand
   BANNER
 
   def process
-    output.puts heading("Available inspectors") + "\n"
+    output.puts heading("Available inspectors", _pry_.config.color) + "\n"
     inspector_map.each do |name, inspector|
       output.write "name: #{text.bold(name)}"
       output.puts selected_inspector?(inspector) ? selected_text : ""

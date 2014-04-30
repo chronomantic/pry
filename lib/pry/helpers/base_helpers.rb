@@ -59,9 +59,9 @@ class Pry
       end
 
       # formatting
-      def heading(text)
+      def heading(text, color)
         text = "#{text}\n--"
-        Pry.config.color ? "\e[1m#{text}\e[0m": text
+        color ? "\e[1m#{text}\e[0m": text
       end
 
       # have fun on the Windows platform.

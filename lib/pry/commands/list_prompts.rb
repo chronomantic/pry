@@ -8,7 +8,7 @@ class Pry::Command::ListPrompts < Pry::ClassCommand
   BANNER
 
   def process
-    output.puts heading("Available prompts") + "\n"
+    output.puts heading("Available prompts", _pry_.config.color) + "\n"
     prompt_map.each do |name, prompt|
       output.write "name: #{text.bold(name)}"
       output.puts selected_prompt?(prompt) ? selected_text : ""
