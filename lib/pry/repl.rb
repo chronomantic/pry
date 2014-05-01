@@ -135,7 +135,10 @@ class Pry
           return :no_more_input
         end
         should_retry = false
-        retry
+        if (ENV['PRY_DEBUGGING_FOR_GUARD'] || '') == '1'
+          STDERR.puts "\n  < pry/readline retry (0x#{Thread.current.object_id.to_s(16)})>"
+          retry
+        end
 
       # Handle <Ctrl+C> like Bash: empty the current input buffer, but don't
       # quit.  This is only for MRI 1.9; other versions of Ruby don't let you
@@ -151,7 +154,10 @@ class Pry
         output.puts e.backtrace
         exception_count += 1
         if exception_count < 5
-          retry
+          if (ENV['PRY_DEBUGGING_FOR_GUARD'] || '') == '1'
+            STDERR.puts "\n  < pry/readline retry (0x#{Thread.current.object_id.to_s(16)})>"
+            retry
+          end
         end
         puts "FATAL: Pry failed to get user input using `#{input}`."
         puts "To fix this you may be able to pass input and output file " \
@@ -180,7 +186,20 @@ class Pry
         end
 
         if defined?(Readline) and input == Readline
-          input_readline(current_prompt, false) # false since we'll add it manually
+          if (ENV['PRY_DEBUGGING_FOR_GUARD'] || '') == '1'
+            STDERR.puts "\n  < pry/readline start (0x#{Thread.current.object_id.to_s(16)})>: prompt:#{current_prompt.inspect}(0x#{current_prompt.object_id.to_s(16)})"
+            # Modify string to check if it's locked
+            current_prompt += "|"
+            current_prompt = current_prompt[0..-2]
+          end
+          input_readline(current_prompt, false).tap do
+            if (ENV['PRY_DEBUGGING_FOR_GUARD'] || '') == '1'
+              STDERR.puts "\n  < pry/readline done (0x#{Thread.current.object_id.to_s(16)})>: prompt:#{current_prompt.inspect}(0x#{current_prompt.object_id.to_s(16)})"
+              # Modify string to check if it's locked
+              current_prompt += "|"
+              current_prompt = current_prompt[0..-2]
+            end
+          end
         elsif defined? Coolline and input.is_a? Coolline
           input_readline(current_prompt)
         else
