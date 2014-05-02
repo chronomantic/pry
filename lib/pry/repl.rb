@@ -137,8 +137,8 @@ class Pry
         should_retry = false
         if (ENV['PRY_DEBUGGING_FOR_GUARD'] || '') == '1'
           STDERR.puts "\n  < pry/readline retry (0x#{Thread.current.object_id.to_s(16)})>"
-          retry
         end
+        retry
 
       # Handle <Ctrl+C> like Bash: empty the current input buffer, but don't
       # quit.  This is only for MRI 1.9; other versions of Ruby don't let you
